@@ -13,7 +13,6 @@ import java.util.Random;
 public class Server {
     private static StringBuilder data;
     private static int lastReceivedIndex=-1;
-    //private static int lastValidReceivedSequence =-1;
     private static int receivedSequence=-1;
     private static String sendingFrame;
     private static String lastReceivedFrame;
@@ -48,12 +47,8 @@ public class Server {
                     }
                     System.out.println("char:" + (char) Integer.parseInt(frame.substring(k, k + 8), 2));
                     int sendAck = random.nextInt(5);
-//                    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+sendAck);
                     lastReceivedFrame = frame;
                     checkIfReject(sendAck);
-//                    if (sendAck == 0) {
-//                        System.out.println("Sending this ack to client: " + sendingFrame);
-//                    }
                     System.out.println("this was received from client: " + frame);
                     System.out.println("Received string from client: " + data);
                 }
@@ -100,8 +95,6 @@ public class Server {
                         System.out.println("replaced :" + data.charAt(temp + 1));
                         rejectedFrames.remove(num);
                         receivedSequence = tempReceivedSequence;
-//                        lastReceivedIndex++;
-//                        System.out.println(rejectedFrames.get(0));
                         return;
                     }
                 }
@@ -123,9 +116,6 @@ public class Server {
                     firstRejected=lastReceivedIndex;
                 }
                 for (int i = 2; i <= windowSize; i++) {
-//                    System.out.println("i "+i);
-//                    System.out.println("1 receivedSequence\t"+receivedSequence);
-//                    System.out.println("2 lastReceivedIndex"+lastReceivedIndex);
                     if (receivedSequence == ((firstRejected + i) % (2 * windowSize))) {
                         inBand = true;
                         break;
@@ -136,9 +126,6 @@ public class Server {
                 int number=0;
                 if(inBand) {
                     for (int i = 1; i <= windowSize; i++) {
-//                        System.out.println("i "+i);
-//                        System.out.println("1 receivedSequence\t"+receivedSequence);
-//                        System.out.println("2 lastReceivedIndex"+lastReceivedIndex);
                         if (receivedSequence == ((firstRejected + i) % (2 * windowSize))) {
                             data.append((char) Integer.parseInt(lastReceivedFrame.substring(k, k + 8), 2));
                             lastRightSequence=receivedSequence;
@@ -147,20 +134,12 @@ public class Server {
                         } else {
                             data.append('~'); //this means this frame was rejected and needs to be filled later
                             rejectedFrames.add(Integer.parseInt(Integer.toBinaryString((tempReceivedSequence+i)%(windowSize*2)),2));
-//                            System.out.println("???????\t"+Integer.parseInt(Integer.toBinaryString((tempReceivedSequence+i)%(windowSize*2)),2));
                         }
                     }
                 }
                 lastReceivedIndex+=number;
                 inBand=false;
             }
-//             else {
-
-
-//                data.append('~'); //this means this frame was rejected and needs to be filled later
-//                data.append((char) Integer.parseInt(lastReceivedFrame.substring(k, k + 8), 2));
-//                return;
-//            }
         }
         return ;
     }
@@ -178,13 +157,9 @@ public class Server {
     public static String RRAck(){ // RR: 00000000
         StringBuilder stb=new StringBuilder();
         String temp=Integer.toBinaryString((receivedSequence+1)%(windowSize*2));
-//        if(rejectedFrames.size()!=0) temp= Integer.toBinaryString(rejectedFrames.get(0));
         while(temp.length()!=k){
             temp='0'+temp;
         }
-//        if(rejectedFrames.size()!=0){
-//            return REJAck(rejectedFrames.get(0) - 1);
-//        }
         stb.append(temp);
         for(int i=0;i<8+1;i++){
             stb.append(0);
