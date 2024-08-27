@@ -24,7 +24,6 @@ public class Client {
     public static boolean endSending=false;
 
     public static void main(String[] args) {
-//        int randFlag = 0;
         Scanner cin=new Scanner(System.in);
         windowSize= (int) Math.pow(2,k-1);
         System.out.println("Enter the text you want to send to the server:");
@@ -56,16 +55,6 @@ public class Client {
                         String temp=null;
                         printWriter.println(temp);
                     }
-//                    if(Math.random() > PROBABILITY || randFlag == 1){
-//                        printWriter.println(transmitting);
-//                        System.out.println("Transmitting to server: " + transmitting);
-//                        randFlag = 0;
-//                    }else{
-//                        System.out.println("[X] Lost ack with frame " +transmitting);
-//                        String temp=null;
-//                        printWriter.println(temp);
-//                        randFlag = 1;
-//                    }
                 }
                 if(!sending){
                     printWriter.println("null");
@@ -121,7 +110,6 @@ public class Client {
                 rejectedFrame.append(temp2);
                 rejectedFrame.append("0");
                 lastReceivedFrame=null;
-//                if((tempIndex+1)<lastAcknowledgedSequence)
                 return rejectedFrame.toString();
             }else if(isRR){
                 lastAcknowledgedSequence=(sequence-1)%(windowSize*2);
